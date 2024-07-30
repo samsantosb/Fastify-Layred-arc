@@ -4,12 +4,16 @@ import cors from "@fastify/cors";
 import Fastify from "fastify";
 import { mongoConnect, mongoDisconnect } from "./database/mongoose-connect";
 import { userRoutes } from "./modules/users/routes/user.route";
+import { postRoutes } from "./modules/posts/routes/post.route";
+import { ratingRoutes } from "./modules/ratings/routes/rating.route";
 
 const fastify = Fastify({ logger: true });
 
 mongoConnect();
 fastify.register(cors);
 fastify.register(userRoutes);
+fastify.register(postRoutes);
+fastify.register(ratingRoutes);
 
 fastify.get("/", async (request, reply) => {
   return { hello: "world" };
