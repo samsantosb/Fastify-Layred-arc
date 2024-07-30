@@ -8,3 +8,4 @@ RUN npm install
 COPY . .
 
 CMD ["npm", "run", "dev"]
+#docker-compose run --rm test

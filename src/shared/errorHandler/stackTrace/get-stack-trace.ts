@@ -1,4 +1,4 @@
-function getStackTrace() {
+export function getStackTrace() {
   const { stack } = new Error();
 
   return stack!

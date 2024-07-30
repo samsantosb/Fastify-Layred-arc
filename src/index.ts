@@ -1,17 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import cors from "@fastify/cors";
 import Fastify from "fastify";
 import { mongoConnect, mongoDisconnect } from "./database/mongoose-connect";
-// import { routes } from "./routes";
+import { userRoutes } from "./modules/users/routes/user.route";
 
 const fastify = Fastify({ logger: true });
 
-// Conectar ao MongoDB
 mongoConnect();
-
-// Registrar rotas
-// fastify.register(routes);
+fastify.register(cors);
+fastify.register(userRoutes);
 
 fastify.get("/", async (request, reply) => {
   return { hello: "world" };

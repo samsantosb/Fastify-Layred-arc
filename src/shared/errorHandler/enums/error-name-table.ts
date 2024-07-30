@@ -1,6 +1,7 @@
 import { statusCode } from "../../statusCode/status-code";
 
 export const errorNamesToStatusCode = {
+  CANNOT_UPDATE: statusCode.INTERNAL_SERVER_ERROR,
   OK: statusCode.OK,
   CREATED: statusCode.CREATED,
   ACCEPTED: statusCode.ACCEPTED,

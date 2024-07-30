@@ -1,7 +1,7 @@
 import { User } from "../models/domain.user.type";
 import { mongooseUser } from "../models/mongoose.user.model";
 
-const getUsers = async (): Promise<User[]> => {
+const getAll = async (): Promise<User[]> => {
   const users = await mongooseUser.find();
 
   return users.map(
@@ -17,7 +17,7 @@ const getUsers = async (): Promise<User[]> => {
   );
 };
 
-const getUserById = async (id: string): Promise<User | null> => {
+const getById = async (id: string): Promise<User | null> => {
   const user = await mongooseUser.findOne({ _id: id });
 
   if (!user) {
@@ -37,7 +37,7 @@ const getUserById = async (id: string): Promise<User | null> => {
   };
 };
 
-const createUser = async (user: {
+const create = async (user: {
   email: string;
   password: string;
   name: string;
@@ -54,7 +54,7 @@ const createUser = async (user: {
   };
 };
 
-const updateUser = async (
+const update = async (
   id: string,
   user: { email?: string; password?: string; name?: string }
 ): Promise<User | null> => {
@@ -79,7 +79,7 @@ const updateUser = async (
   };
 };
 
-const softDeleteUser = async (id: string): Promise<User | null> => {
+const softDelete = async (id: string): Promise<User | null> => {
   const user = await mongooseUser
     .findByIdAndUpdate(id, { isDeleted: true }, { new: true })
     .exec();
@@ -99,4 +99,10 @@ const softDeleteUser = async (id: string): Promise<User | null> => {
   };
 };
 
-export { getUsers, getUserById, createUser, updateUser, softDeleteUser };
+export default {
+  getAll,
+  getById,
+  create,
+  update,
+  softDelete,
+};

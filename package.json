@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "mongoose": "^8.5.1",
@@ -15,6 +16,7 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
-    "dev": "nodemon --legacy-watch --verbose"
+    "dev": "nodemon --legacy-watch --verbose",
+    "test": "jest"
   }
 }

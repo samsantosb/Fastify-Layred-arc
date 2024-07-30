@@ -6,7 +6,8 @@
  * @readonly
  * @enum {string}
  */
-export const names = {
+export const errorNames = {
+  CANNOT_UPDATE: "CANNOT_UPDATE",
   NOT_FOUND: "NOT_FOUND",
   UNAUTHORIZED: "UNAUTHORIZED",
   BAD_REQUEST: "BAD_REQUEST",

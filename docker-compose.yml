@@ -12,6 +12,15 @@ services:
     depends_on:
       - mongo
 
+  test:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run test
+    depends_on:
+      - mongo
+
   mongo:
     image: mongo:latest
     ports:
