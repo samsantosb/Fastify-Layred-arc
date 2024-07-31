@@ -29,49 +29,6 @@ const getById = async (id: string): Promise<Rating | null> => {
   };
 };
 
-const getAllByUserId = async (userId: string): Promise<Rating[]> => {
-  const ratings = await mongooseRating.find({ user: userId });
-
-  return ratings.map(
-    ({ _id, post, rating, isDeleted, updatedAt, createdAt }) => ({
-      id: String(_id),
-      user: userId,
-      post: String(post),
-      rating,
-      isDeleted,
-      updatedAt,
-      createdAt,
-    })
-  );
-};
-
-const getAllByPostId = async (postId: string): Promise<Rating | null> => {
-  const rating = await mongooseRating.findOne({ post: postId });
-
-  if (!rating) {
-    return null;
-  }
-
-  const {
-    _id,
-    rating: ratingValue,
-    isDeleted,
-    updatedAt,
-    createdAt,
-    user,
-  } = rating;
-
-  return {
-    id: String(_id),
-    post: postId,
-    user: String(user),
-    rating: ratingValue,
-    isDeleted,
-    updatedAt,
-    createdAt,
-  };
-};
-
 const create = async (rating: {
   user: string;
   post: string;
@@ -136,8 +93,6 @@ const softDelete = async (id: string): Promise<Rating | null> => {
 
 export default {
   getById,
-  getAllByUserId,
-  getAllByPostId,
   create,
   update,
   softDelete,

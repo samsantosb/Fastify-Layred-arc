@@ -21,7 +21,10 @@ const login = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send({ token });
 };
 
-const getAll = async (request: FastifyRequest, reply: FastifyReply) => {
+const getAll = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const [err, users] = await userService.getAll();
 
   if (err) {
@@ -33,7 +36,10 @@ const getAll = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(users);
 };
 
-const getById = async (request: FastifyRequest, reply: FastifyReply) => {
+const getById = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params } = request;
 
   const id = mongooseIdDTO(params);
@@ -83,7 +89,10 @@ const update = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(updatedUser);
 };
 
-const softDelete = async (request: FastifyRequest, reply: FastifyReply) => {
+const softDelete = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params } = request;
 
   const id = mongooseIdDTO(params);

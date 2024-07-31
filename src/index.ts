@@ -19,7 +19,7 @@ fastify.get("/", async (request, reply) => {
   return { hello: "world" };
 });
 
-// Função para iniciar o servidor
+// server start function
 const start = async () => {
   try {
     await fastify.listen({
@@ -36,10 +36,10 @@ const start = async () => {
   }
 };
 
-// Iniciar o servidor
+// server start
 start();
 
-// Shutdown gracioso
+// graceful shutdown
 process.on("SIGINT", async () => {
   console.log("SIGINT signal received: closing MongoDB connection");
   await mongoDisconnect();

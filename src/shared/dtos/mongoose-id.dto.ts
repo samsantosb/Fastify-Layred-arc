@@ -10,8 +10,8 @@ const objectIdSchema = z.string().refine(isValidObjectId, {
   message: "Invalid ObjectId",
 });
 
-export function mongooseIdDTO(userId: unknown) {
-  const id = objectIdSchema.parse(userId);
+export function mongooseIdDTO(id: unknown) {
+  const parsed = objectIdSchema.parse(id);
 
-  return id;
+  return parsed;
 }

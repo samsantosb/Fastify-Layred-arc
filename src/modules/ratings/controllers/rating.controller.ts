@@ -5,28 +5,20 @@ import { statusCode } from "../../../shared/statusCode/status-code";
 import { ratingDTO } from "../dtos/rating.dto";
 import { mongooseIdDTO } from "../../../shared/dtos/mongoose-id.dto";
 
-const getAllByUserId = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { params } = request;
+const getById = async (
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
+  reply: FastifyReply
+) => {
+  const {
+    params: { id },
+  } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(id);
 
-  const [err, ratings] = await ratingService.getAllByUserId(id);
-
-  if (err) {
-    const { errMessage, errStatusCode } = errorHandler(err);
-
-    return reply.status(errStatusCode).send({ message: errMessage });
-  }
-
-  return reply.status(statusCode.OK).send(ratings);
-};
-
-const getAllByPostId = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { params } = request;
-
-  const id = mongooseIdDTO(params);
-
-  const [err, rating] = await ratingService.getAllByPostId(id);
+  const [err, rating] = await ratingService.getById(validId);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);
@@ -37,23 +29,10 @@ const getAllByPostId = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(rating);
 };
 
-const getById = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { params } = request;
-
-  const id = mongooseIdDTO(params);
-
-  const [err, rating] = await ratingService.getById(id);
-
-  if (err) {
-    const { errMessage, errStatusCode } = errorHandler(err);
-
-    return reply.status(errStatusCode).send({ message: errMessage });
-  }
-
-  return reply.status(statusCode.OK).send(rating);
-}
-
-const create = async (request: FastifyRequest, reply: FastifyReply) => {
+const create = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { body } = request;
 
   const ratingData = ratingDTO(body);
@@ -69,7 +48,10 @@ const create = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.CREATED).send(rating);
 };
 
-const update = async (request: FastifyRequest, reply: FastifyReply) => {
+const update = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params, body } = request;
 
   const id = mongooseIdDTO(params);
@@ -87,7 +69,10 @@ const update = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(updatedRating);
 };
 
-const softDelete = async (request: FastifyRequest, reply: FastifyReply) => {
+const softDelete = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params } = request;
 
   const id = mongooseIdDTO(params);
@@ -104,8 +89,6 @@ const softDelete = async (request: FastifyRequest, reply: FastifyReply) => {
 };
 
 export default {
-  getAllByUserId,
-  getAllByPostId,
   getById,
   create,
   update,

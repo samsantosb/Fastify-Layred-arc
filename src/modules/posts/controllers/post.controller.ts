@@ -5,7 +5,10 @@ import { statusCode } from "../../../shared/statusCode/status-code";
 import { postDTO } from "../dtos/post.dto";
 import { mongooseIdDTO } from "../../../shared/dtos/mongoose-id.dto";
 
-const getAll = async (request: FastifyRequest, reply: FastifyReply) => {
+const getAll = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const [err, posts] = await postService.getAll();
 
   if (err) {
@@ -17,7 +20,10 @@ const getAll = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(posts);
 };
 
-const getById = async (request: FastifyRequest, reply: FastifyReply) => {
+const getById = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params } = request;
 
   const id = mongooseIdDTO(params);
@@ -33,7 +39,10 @@ const getById = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(post);
 };
 
-const create = async (request: FastifyRequest, reply: FastifyReply) => {
+const create = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { body } = request;
 
   const postData = postDTO(body);
@@ -49,7 +58,10 @@ const create = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.CREATED).send(post);
 };
 
-const update = async (request: FastifyRequest, reply: FastifyReply) => {
+const update = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params, body } = request;
 
   const id = mongooseIdDTO(params);
@@ -67,7 +79,10 @@ const update = async (request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(statusCode.OK).send(updatedPost);
 };
 
-const softDelete = async (request: FastifyRequest, reply: FastifyReply) => {
+const softDelete = async (
+  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  reply: FastifyReply
+) => {
   const { params } = request;
 
   const id = mongooseIdDTO(params);

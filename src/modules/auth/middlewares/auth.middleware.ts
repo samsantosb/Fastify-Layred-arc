@@ -1,4 +1,3 @@
-// src/middleware/authMiddleware.ts
 import { FastifyRequest, FastifyReply } from "fastify";
 import { verifyJWT } from "../services/auth.service";
 import { statusCode } from "../../../shared/statusCode/status-code";
@@ -6,7 +5,6 @@ import { statusCode } from "../../../shared/statusCode/status-code";
 export const authMiddleware = async (
   request: FastifyRequest<{ Headers: { authorization: string } }>,
   reply: FastifyReply,
-  done: () => void
 ) => {
   const {
     headers: { authorization },
@@ -27,6 +25,4 @@ export const authMiddleware = async (
     reply.status(statusCode.UNAUTHORIZED).send({ error: "Invalid token" });
     return;
   }
-
-  done();
 };

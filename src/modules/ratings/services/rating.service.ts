@@ -2,24 +2,33 @@ import { err, success } from "../../../shared/api-patterns/return-patterns";
 import { errorMessages } from "../../../shared/errorHandler/enums/error-messages";
 import { errorNames } from "../../../shared/errorHandler/enums/error-names";
 import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
+import postRepository from "../../posts/repositories/post.repository";
+import postService from "../../posts/services/post.service";
+import userRepository from "../../users/repositories/user.repository";
+import userService from "../../users/services/user.service";
 import ratingRepository from "../repositories/rating.repository";
-
-const getAllByUserId = async (userId: string) => {
-  const ratings = await ratingRepository.getAllByUserId(userId);
-
-  return success(ratings);
-};
-
-const getAllByPostId = async (id: string) => {
-  const rating = await ratingRepository.getAllByPostId(id);
-
-  return success(rating);
-};
 
 const getById = async (id: string) => {
   const rating = await ratingRepository.getById(id);
 
-  return success(rating);
+  if (!rating) {
+    return err(
+      errorMessages.INTERNAL_SERVER_ERROR,
+      getStackTrace(),
+      errorNames.NOT_FOUND
+    );
+  }
+
+  const [userErr, user] = await userService.getById(rating.user);
+  const [postErr, post] = await postService.getById(rating.post);
+
+  const ratingWithUserAndPost = {
+    ...rating,
+    user,
+    post,
+  };
+
+  return success(ratingWithUserAndPost);
 };
 
 const create = async (rating: {
@@ -53,8 +62,6 @@ const softDelete = async (id: string) => {
 };
 
 export default {
-  getAllByUserId,
-  getAllByPostId,
   getById,
   create,
   update,

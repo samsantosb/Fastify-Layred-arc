@@ -45,7 +45,17 @@ const getAll = async () => {
 const getById = async (id: string) => {
   const user = await userRepository.getById(id);
 
-  return success(user);
+  if (!user) {
+    return err(
+      errorMessages.NOT_FOUND(`User - ${id}`),
+      getStackTrace(),
+      errorNames.NOT_FOUND
+    );
+  }
+
+  const { password, ...userWithoutPassword } = user;
+
+  return success(userWithoutPassword);
 };
 
 const create = async (user: {
