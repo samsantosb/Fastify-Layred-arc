@@ -5,6 +5,24 @@ import { statusCode } from "../../../shared/statusCode/status-code";
 import { userDTO } from "../dtos/user.dto";
 import { mongooseIdDTO } from "../../../shared/dtos/mongoose-id.dto";
 
+const login = async (request: FastifyRequest, reply: FastifyReply) => {
+  const { body } = request;
+
+  const { email, password } = userDTO(body);
+
+  const [err, payload] = await userService.login({ email, password });
+
+  if (err) {
+    const { errMessage, errStatusCode } = errorHandler(err);
+
+    return reply.status(errStatusCode).send({ message: errMessage });
+  }
+
+  const token = request.jwt.sign(payload);
+
+  return reply.status(statusCode.OK).send({ token });
+};
+
 const getAll = async (request: FastifyRequest, reply: FastifyReply) => {
   const [err, users] = await userService.getAll();
 
@@ -84,6 +102,7 @@ const softDelete = async (request: FastifyRequest, reply: FastifyReply) => {
 };
 
 export default {
+  login,
   getAll,
   getById,
   create,

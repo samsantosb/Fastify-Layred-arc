@@ -6,11 +6,26 @@ import { mongoConnect, mongoDisconnect } from "./database/mongoose-connect";
 import { userRoutes } from "./modules/users/routes/user.route";
 import { postRoutes } from "./modules/posts/routes/post.route";
 import { ratingRoutes } from "./modules/ratings/routes/rating.route";
+import fjwt, { FastifyJWT } from "@fastify/jwt";
+import fCookie from "@fastify/cookie";
 
 const fastify = Fastify({ logger: true });
 
 mongoConnect();
 fastify.register(cors);
+fastify.register(fjwt, { secret: "supersecretcode" });
+fastify.addHook("preHandler", (req, res, next) => {
+  req.jwt = fastify.jwt;
+  return next();
+});
+
+// cookies
+fastify.register(fCookie, {
+  secret: "some-secret-key",
+  hook: "preHandler",
+});
+
+// routes
 fastify.register(userRoutes);
 fastify.register(postRoutes);
 fastify.register(ratingRoutes);

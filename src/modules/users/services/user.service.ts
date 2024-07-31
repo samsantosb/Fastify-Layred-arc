@@ -3,6 +3,36 @@ import { errorMessages } from "../../../shared/errorHandler/enums/error-messages
 import { errorNames } from "../../../shared/errorHandler/enums/error-names";
 import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
 import userRepository from "../repositories/user.repository";
+import bcrypt from "bcrypt";
+
+const login = async (user: { email: string; password: string }) => {
+  const foundUser = await userRepository.getByEmail(user.email);
+
+  if (!foundUser) {
+    return err(
+      errorMessages.NOT_FOUND(`User - ${user.email}`),
+      getStackTrace(),
+      errorNames.NOT_FOUND
+    );
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    user.password,
+    foundUser.password
+  );
+
+  if (!isPasswordCorrect) {
+    return err(
+      errorMessages.INVALID_CREDENTIALS,
+      getStackTrace(),
+      errorNames.INTERNAL_SERVER_ERROR
+    );
+  }
+
+  const { email, name } = foundUser;
+
+  return success({ email, name });
+}
 
 const getAll = async () => {
   const users = await userRepository.getAll();
@@ -21,7 +51,20 @@ const create = async (user: {
   password: string;
   name: string;
 }) => {
-  const createdUser = await userRepository.create(user);
+  const SALT_ROUNDS = 10;
+  const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
+  const createdUser = await userRepository.create({
+    ...user,
+    password: hashedPassword,
+  });
+
+  if (!createdUser) {
+    return err(
+      errorMessages.INTERNAL_SERVER_ERROR,
+      getStackTrace(),
+      errorNames.INTERNAL_SERVER_ERROR
+    );
+  }
 
   return success(createdUser);
 };
@@ -50,6 +93,7 @@ const softDelete = async (id: string) => {
 };
 
 export default {
+  login,
   getAll,
   getById,
   create,

@@ -17,6 +17,26 @@ const getAll = async (): Promise<User[]> => {
   );
 };
 
+const getByEmail = async (email: string): Promise<User | null> => {
+  const user = await mongooseUser.findOne({ email });
+
+  if (!user) {
+    return null;
+  }
+
+  const { _id, name, password, isDeleted, updatedAt, createdAt } = user;
+
+  return {
+    id: String(_id),
+    email,
+    name,
+    password,
+    isDeleted,
+    updatedAt,
+    createdAt,
+  };
+};
+
 const getById = async (id: string): Promise<User | null> => {
   const user = await mongooseUser.findOne({ _id: id });
 
@@ -100,6 +120,7 @@ const softDelete = async (id: string): Promise<User | null> => {
 };
 
 export default {
+  getByEmail,
   getAll,
   getById,
   create,
