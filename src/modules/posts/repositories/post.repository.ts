@@ -1,9 +1,8 @@
-import { Post } from "../models/domain.post.type";
-import { mongoosePost } from "../models/mongoose.post.model";
-import mongoose, { ObjectId } from "mongoose";
+import {Post} from '../models/domain.post.type';
+import {mongoosePost} from '../models/mongoose.post.model';
 
 const getAll = async (): Promise<Post[]> => {
-  const posts = await mongoosePost.find()
+  const posts = await mongoosePost.find();
 
   return posts.map(
     ({
@@ -26,12 +25,12 @@ const getAll = async (): Promise<Post[]> => {
       isDeleted,
       updatedAt,
       createdAt,
-    })
+    }),
   );
 };
 
 const getById = async (id: string): Promise<Post | null> => {
-  const post = await mongoosePost.findOne({ _id: id });
+  const post = await mongoosePost.findOne({_id: id});
 
   if (!post) {
     return null;
@@ -83,18 +82,16 @@ const create = async (post: {
   };
 };
 
-const update = async (
-  id: string,
-  post: {
-    title?: string;
-    description?: string;
-    category?: string;
-    thumbnailUrl?: string;
-    contentUrl?: string;
-  }
-): Promise<Post | null> => {
+const update = async (post: {
+  id: string;
+  title?: string;
+  description?: string;
+  category?: string;
+  thumbnailUrl?: string;
+  contentUrl?: string;
+}): Promise<Post | null> => {
   const updatedPost = await mongoosePost
-    .findByIdAndUpdate(id, post, {
+    .findByIdAndUpdate(post.id, post, {
       new: true,
     })
     .exec();
@@ -118,7 +115,7 @@ const update = async (
 
 const softDelete = async (id: string): Promise<Post | null> => {
   const deletedPost = await mongoosePost
-    .findByIdAndUpdate(id, { isDeleted: true }, { new: true })
+    .findByIdAndUpdate(id, {isDeleted: true}, {new: true})
     .exec();
 
   if (!deletedPost) {

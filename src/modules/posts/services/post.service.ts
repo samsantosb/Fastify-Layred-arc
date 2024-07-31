@@ -1,9 +1,11 @@
-import { ObjectId } from "mongoose";
-import { err, success } from "../../../shared/api-patterns/return-patterns";
-import { errorMessages } from "../../../shared/errorHandler/enums/error-messages";
-import { errorNames } from "../../../shared/errorHandler/enums/error-names";
-import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
-import postRepository from "../repositories/post.repository";
+import {validateRequest} from '../../../shared/api-patterns/request-validator';
+import {err, success} from '../../../shared/api-patterns/return-patterns';
+import {errorMessages} from '../../../shared/errorHandler/enums/error-messages';
+import {errorNames} from '../../../shared/errorHandler/enums/error-names';
+import {getStackTrace} from '../../../shared/errorHandler/stackTrace/get-stack-trace';
+import postRepository from '../repositories/post.repository';
+import {postSchema} from '../schemas/create.schema';
+import {updateSchema} from '../schemas/update.schema';
 
 const getAll = async () => {
   const posts = await postRepository.getAll();
@@ -17,36 +19,25 @@ const getById = async (id: string) => {
   return success(post);
 };
 
-const create = async (post: {
-  title: string;
-  description: string;
-  category: string;
-  thumbnailUrl: string;
-  contentUrl: string;
-}) => {
+const create = async (payload: unknown) => {
+  const [schemaErr, post] = validateRequest(payload, postSchema);
+
+  if (schemaErr) return [schemaErr, null];
+
   const createdPost = await postRepository.create(post);
 
   return success(createdPost);
 };
 
-const update = async (
-  id: string,
-  post: {
-    title?: string;
-    description?: string;
-    category?: string;
-    thumbnailUrl?: string;
-    contentUrl?: string;
-  }
-) => {
-  const updatedPost = await postRepository.update(id, post);
+const update = async (payload: unknown) => {
+  const [schemaErr, post] = validateRequest(payload, updateSchema);
+
+  if (schemaErr) return [schemaErr, null];
+
+  const updatedPost = await postRepository.update(post);
 
   if (!updatedPost) {
-    return err(
-      errorMessages.INTERNAL_SERVER_ERROR,
-      getStackTrace(),
-      errorNames.CANNOT_UPDATE
-    );
+    return err(errorMessages.INTERNAL_SERVER_ERROR, getStackTrace(), errorNames.CANNOT_UPDATE);
   }
 
   return success(updatedPost);
