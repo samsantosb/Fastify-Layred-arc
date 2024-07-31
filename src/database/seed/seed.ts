@@ -18,20 +18,21 @@ const seedDatabase = async () => {
 
     // User
     const user = new User({
-      email: "user@example.com",
-      password: await encryptPassword("password123"),
-      name: "John Doe",
+      email: "doctor.robotnik@example.com",
+      password: await encryptPassword("supersecretpassword"),
+      name: "Dr. Robotnik",
     });
 
     await user.save();
 
     // Post
     const post = new Post({
-      title: "Título do Post",
-      description: "Descrição do Post",
-      category: "Categoria do Post",
-      thumbnailUrl: "http://exemplo.com/thumbnail.jpg",
-      contentUrl: "http://exemplo.com/content.jpg",
+      title: "Speeding Through Green Hill Zone: Complete Guide",
+      description:
+        "Uncover all the secrets and fastest paths in Green Hill Zone.",
+      category: "Gaming",
+      thumbnailUrl: "https://example.com/images/sonic-thumbnail.jpg",
+      contentUrl: "https://example.com/articles/sonic-guide",
     });
 
     await post.save();
