@@ -10,6 +10,6 @@
     "rootDir": "./src",
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/database/seed/seed.ts"],
   "exclude": ["node_modules", "**/*.test.ts"]
 }

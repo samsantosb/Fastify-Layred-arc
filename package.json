@@ -22,6 +22,7 @@
   },
   "scripts": {
     "dev": "nodemon --legacy-watch --verbose",
-    "test": "jest"
+    "test": "jest",
+    "seed": "ts-node src/database/seed/seed.ts"
   }
 }
