@@ -4,7 +4,7 @@ import {errorMessages} from '../../../shared/errorHandler/enums/error-messages';
 import {errorNames} from '../../../shared/errorHandler/enums/error-names';
 import {getStackTrace} from '../../../shared/errorHandler/stackTrace/get-stack-trace';
 import postRepository from '../repositories/post.repository';
-import {postSchema} from '../schemas/create.schema';
+import {createSchema} from '../schemas/create.schema';
 import {updateSchema} from '../schemas/update.schema';
 
 const getAll = async () => {
@@ -20,7 +20,7 @@ const getById = async (id: string) => {
 };
 
 const create = async (payload: unknown) => {
-  const [schemaErr, post] = validateRequest(payload, postSchema);
+  const [schemaErr, post] = validateRequest(payload, createSchema);
 
   if (schemaErr) return [schemaErr, null];
 

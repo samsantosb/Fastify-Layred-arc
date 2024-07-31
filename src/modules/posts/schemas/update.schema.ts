@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {postSchema} from './create.schema';
+import {createSchema} from './create.schema';
 import mongoose from 'mongoose';
 
 const isValidObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
@@ -11,6 +11,6 @@ export const updateSchema = z
         message: 'Invalid ObjectId',
       }),
     }),
-    body: postSchema,
+    body: createSchema,
   })
   .transform(data => ({...data.body, ...data.params}));
