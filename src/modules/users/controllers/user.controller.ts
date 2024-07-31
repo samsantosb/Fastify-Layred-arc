@@ -10,15 +10,13 @@ const login = async (request: FastifyRequest, reply: FastifyReply) => {
 
   const { email, password } = userDTO(body);
 
-  const [err, payload] = await userService.login({ email, password });
+  const [err, token] = await userService.login({ email, password });
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);
 
     return reply.status(errStatusCode).send({ message: errMessage });
   }
-
-  const token = request.jwt.sign(payload);
 
   return reply.status(statusCode.OK).send({ token });
 };

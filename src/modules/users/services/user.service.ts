@@ -2,8 +2,8 @@ import { err, success } from "../../../shared/api-patterns/return-patterns";
 import { errorMessages } from "../../../shared/errorHandler/enums/error-messages";
 import { errorNames } from "../../../shared/errorHandler/enums/error-names";
 import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
+import authService from "../../auth/services/auth.service";
 import userRepository from "../repositories/user.repository";
-import bcrypt from "bcrypt";
 
 const login = async (user: { email: string; password: string }) => {
   const foundUser = await userRepository.getByEmail(user.email);
@@ -16,12 +16,12 @@ const login = async (user: { email: string; password: string }) => {
     );
   }
 
-  const isPasswordCorrect = await bcrypt.compare(
+  const isAuthenticated = await authService.comparePassword(
     user.password,
     foundUser.password
   );
 
-  if (!isPasswordCorrect) {
+  if (!isAuthenticated) {
     return err(
       errorMessages.INVALID_CREDENTIALS,
       getStackTrace(),
@@ -31,8 +31,10 @@ const login = async (user: { email: string; password: string }) => {
 
   const { email, name } = foundUser;
 
-  return success({ email, name });
-}
+  const token = authService.createJWT({ email, name });
+
+  return success(token);
+};
 
 const getAll = async () => {
   const users = await userRepository.getAll();
@@ -51,12 +53,7 @@ const create = async (user: {
   password: string;
   name: string;
 }) => {
-  const SALT_ROUNDS = 10;
-  const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
-  const createdUser = await userRepository.create({
-    ...user,
-    password: hashedPassword,
-  });
+  const createdUser = await userRepository.create(user);
 
   if (!createdUser) {
     return err(
