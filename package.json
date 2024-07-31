@@ -1,9 +1,11 @@
 {
   "dependencies": {
     "@fastify/cors": "^9.0.1",
+    "@fastify/one-line-logger": "^1.4.0",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "mongoose": "^8.5.1",
+    "ts-pattern": "^5.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
