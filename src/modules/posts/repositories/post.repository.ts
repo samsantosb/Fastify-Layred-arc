@@ -113,7 +113,7 @@ const update = async (post: {
   };
 };
 
-const softDelete = async (id: string): Promise<Post | null> => {
+const softDelete = async (id: string): Promise<Post | null> => {  
   const deletedPost = await mongoosePost
     .findByIdAndUpdate(id, {isDeleted: true}, {new: true})
     .exec();
