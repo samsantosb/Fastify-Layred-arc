@@ -73,7 +73,9 @@ const create = async (user: {
     );
   }
 
-  return success(createdUser);
+  const { password, ...userWithoutPassword } = createdUser;
+
+  return success(userWithoutPassword);
 };
 
 const update = async (

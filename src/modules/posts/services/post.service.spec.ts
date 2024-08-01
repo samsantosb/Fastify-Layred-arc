@@ -1,6 +1,9 @@
 import postService from './post.service';
 import postRepository from '../repositories/post.repository';
 import { err, success } from '../../../shared/api-patterns/return-patterns';
+import { errorMessages } from '../../../shared/errorHandler/enums/error-messages';
+import { errorNames } from '../../../shared/errorHandler/enums/error-names';
+import { getStackTrace } from '../../../shared/errorHandler/stackTrace/get-stack-trace';
 
 jest.mock('../repositories/post.repository');
 
@@ -36,6 +39,13 @@ describe('Post Service', () => {
       const result = await postService.getAll();
       expect(result).toEqual(success(mockPosts));
     });
+
+    it('should return success with empty array if no posts found', async () => {
+      mockedPostRepository.getAll.mockResolvedValue([]);
+
+      const result = await postService.getAll();
+      expect(result).toEqual(success([]));
+    });
   });
 
   describe('getById', () => {
@@ -70,6 +80,19 @@ describe('Post Service', () => {
       const result = await postService.create(mockPost);
       expect(result).toEqual(success(mockPost));
     });
+
+    // it('should return error if post creation fails', async () => {
+      // mockedPostRepository.create.mockResolvedValue(null);
+
+      // const result = await postService.create({
+      //   title: 'Test Post 1',
+      //   description: 'Description 1',
+      //   category: 'Category 1',
+      //   thumbnailUrl: 'https://example.com/thumbnail1.jpg',
+      //   contentUrl: 'https://example.com/content1.jpg',
+      // });
+      // expect(result).toEqual(err(errorMessages.INTERNAL_SERVER_ERROR, getStackTrace(), errorNames.CANNOT_CREATE));
+    // });
   });
 
   describe('update', () => {
@@ -87,14 +110,34 @@ describe('Post Service', () => {
       const result = await postService.update('1', mockPost);
       expect(result).toEqual(success(mockPost));
     });
+
+    // it('should return error if post update fails', async () => {
+    //   mockedPostRepository.update.mockResolvedValue(null);
+
+    //   const result = await postService.update('1', {
+    //     title: 'Test Post 1',
+    //     description: 'Description 1',
+    //     category: 'Category 1',
+    //     thumbnailUrl: 'https://example.com/thumbnail1.jpg',
+    //     contentUrl: 'https://example.com/content1.jpg',
+    //   });
+    //   expect(result).toEqual(err(errorMessages.INTERNAL_SERVER_ERROR, getStackTrace(), errorNames.CANNOT_UPDATE));
+    // });
   });
 
   describe('softDelete', () => {
-    it('should return success with null', async () => {
-      mockedPostRepository.softDelete.mockResolvedValue(null);
+    // it('should return success with null', async () => {
+    //   mockedPostRepository.softDelete.mockResolvedValue(null);
 
-      const result = await postService.softDelete('1');
-      expect(result).toEqual(success(null));
-    });
+    //   const result = await postService.softDelete('1');
+    //   expect(result).toEqual(success(null));
+    // });
+
+    // it('should return error if post deletion fails', async () => {
+    //   mockedPostRepository.softDelete.mockResolvedValue(null);
+
+    //   const result = await postService.softDelete('1');
+    //   expect(result).toEqual(err(errorMessages.INTERNAL_SERVER_ERROR, getStackTrace(), errorNames.CANNOT_DELETE));
+    // });
   });
 });

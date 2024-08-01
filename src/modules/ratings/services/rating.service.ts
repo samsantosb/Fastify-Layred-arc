@@ -2,9 +2,7 @@ import { err, success } from "../../../shared/api-patterns/return-patterns";
 import { errorMessages } from "../../../shared/errorHandler/enums/error-messages";
 import { errorNames } from "../../../shared/errorHandler/enums/error-names";
 import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
-import postRepository from "../../posts/repositories/post.repository";
 import postService from "../../posts/services/post.service";
-import userRepository from "../../users/repositories/user.repository";
 import userService from "../../users/services/user.service";
 import ratingRepository from "../repositories/rating.repository";
 

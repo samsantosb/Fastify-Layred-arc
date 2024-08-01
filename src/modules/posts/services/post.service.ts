@@ -1,21 +1,8 @@
-import { ObjectId } from "mongoose";
 import { err, success } from "../../../shared/api-patterns/return-patterns";
 import { errorMessages } from "../../../shared/errorHandler/enums/error-messages";
 import { errorNames } from "../../../shared/errorHandler/enums/error-names";
 import { getStackTrace } from "../../../shared/errorHandler/stackTrace/get-stack-trace";
 import postRepository from "../repositories/post.repository";
-
-const getAll = async () => {
-  const posts = await postRepository.getAll();
-
-  return success(posts);
-};
-
-const getById = async (id: string) => {
-  const post = await postRepository.getById(id);
-
-  return success(post);
-};
 
 const create = async (post: {
   title: string;
@@ -25,6 +12,14 @@ const create = async (post: {
   contentUrl: string;
 }) => {
   const createdPost = await postRepository.create(post);
+
+  if (!createdPost) {
+    return err(
+      errorMessages.INTERNAL_SERVER_ERROR,
+      getStackTrace(),
+      errorNames.CANNOT_CREATE
+    );
+  }
 
   return success(createdPost);
 };
@@ -52,8 +47,36 @@ const update = async (
   return success(updatedPost);
 };
 
+const getAll = async () => {
+  const posts = await postRepository.getAll();
+
+  return success(posts);
+};
+
+const getById = async (id: string) => {
+  const post = await postRepository.getById(id);
+
+  if (!post) {
+    return err(
+      errorMessages.INTERNAL_SERVER_ERROR,
+      getStackTrace(),
+      errorNames.NOT_FOUND
+    );
+  }
+
+  return success(post);
+};
+
 const softDelete = async (id: string) => {
-  await postRepository.softDelete(id);
+  const remove = await postRepository.softDelete(id);
+
+  if (!remove) {
+    return err(
+      errorMessages.INTERNAL_SERVER_ERROR,
+      getStackTrace(),
+      errorNames.CANNOT_DELETE,
+    );
+  }
 
   return success(null);
 };

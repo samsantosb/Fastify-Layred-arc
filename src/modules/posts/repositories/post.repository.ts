@@ -68,7 +68,7 @@ const create = async (post: {
   category: string;
   thumbnailUrl: string;
   contentUrl: string;
-}): Promise<Post> => {
+}): Promise<Post | null> => {
   const createdPost = await mongoosePost.create(post);
   return {
     id: String(createdPost._id),

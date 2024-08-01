@@ -45,12 +45,13 @@ describe("User Service", () => {
         id: "1",
         email: "test1@example.com",
         name: "Test User 1",
-        password: "password", // Adicionando a propriedade password
+        password: "password",
       };
       mockedUserRepository.getById.mockResolvedValue(mockUser);
 
       const result = await userService.getById("1");
-      expect(result).toEqual(success(mockUser));
+      const { password, ...user } = mockUser;
+      expect(result).toEqual(success(user));
     });
   });
 
@@ -69,7 +70,10 @@ describe("User Service", () => {
         password: "password",
         name: "Test User 1",
       });
-      expect(result).toEqual(success(mockUser));
+
+      const { password, ...user } = mockUser;
+
+      expect(result).toEqual(success(user));
     });
   });
 

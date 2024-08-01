@@ -49,16 +49,19 @@ const create = async (
 };
 
 const update = async (
-  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
   reply: FastifyReply
 ) => {
   const { params, body } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(params.id);
 
   const rating = ratingDTO(body);
 
-  const [err, updatedRating] = await ratingService.update(id, rating);
+  const [err, updatedRating] = await ratingService.update(validId, rating);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);
@@ -70,14 +73,17 @@ const update = async (
 };
 
 const softDelete = async (
-  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
   reply: FastifyReply
 ) => {
   const { params } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(params.id);
 
-  const [err] = await ratingService.softDelete(id);
+  const [err] = await ratingService.softDelete(validId);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);

@@ -4,11 +4,12 @@ import userService from "../services/user.service";
 import { statusCode } from "../../../shared/statusCode/status-code";
 import { userDTO } from "../dtos/user.dto";
 import { mongooseIdDTO } from "../../../shared/dtos/mongoose-id.dto";
+import { loginDTO } from "../dtos/login.dto";
 
 const login = async (request: FastifyRequest, reply: FastifyReply) => {
   const { body } = request;
 
-  const { email, password } = userDTO(body);
+  const { email, password } = loginDTO(body);
 
   const [err, token] = await userService.login({ email, password });
 

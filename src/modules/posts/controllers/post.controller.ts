@@ -4,6 +4,7 @@ import postService from "../services/post.service";
 import { statusCode } from "../../../shared/statusCode/status-code";
 import { postDTO } from "../dtos/post.dto";
 import { mongooseIdDTO } from "../../../shared/dtos/mongoose-id.dto";
+import { postUpdateDTO } from "../dtos/post-update.dto";
 
 const getAll = async (
   request: FastifyRequest<{ Headers: { authorization: string } }>,
@@ -21,14 +22,19 @@ const getAll = async (
 };
 
 const getById = async (
-  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
   reply: FastifyReply
 ) => {
-  const { params } = request;
+  const {
+    params: { id },
+  } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(id);
 
-  const [err, post] = await postService.getById(id);
+  const [err, post] = await postService.getById(validId);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);
@@ -59,16 +65,19 @@ const create = async (
 };
 
 const update = async (
-  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
   reply: FastifyReply
 ) => {
   const { params, body } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(params.id);
 
-  const post = postDTO(body);
+  const post = postUpdateDTO(body);
 
-  const [err, updatedPost] = await postService.update(id, post);
+  const [err, updatedPost] = await postService.update(validId, post);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);
@@ -80,14 +89,17 @@ const update = async (
 };
 
 const softDelete = async (
-  request: FastifyRequest<{ Headers: { authorization: string } }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Headers: { authorization: string };
+  }>,
   reply: FastifyReply
 ) => {
   const { params } = request;
 
-  const id = mongooseIdDTO(params);
+  const validId = mongooseIdDTO(params.id);
 
-  const [err] = await postService.softDelete(id);
+  const [err] = await postService.softDelete(validId);
 
   if (err) {
     const { errMessage, errStatusCode } = errorHandler(err);

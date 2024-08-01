@@ -1,4 +1,3 @@
-// Defina um tipo para a resposta de sucesso
 type SuccessResponse<T> = [null, T];
 
 /**
